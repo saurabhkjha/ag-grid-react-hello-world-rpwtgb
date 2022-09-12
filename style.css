@@ -1,0 +1,8 @@
+h1,
+p {
+  font-family: Lato;
+}
+
+.horiz-menu > div ul li {
+  display: inline;
+}
