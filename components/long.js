@@ -6,7 +6,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import '../style.css';
 
-export default function LongMenu({ id }) {
+export default function ActionMenu({ id }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -48,8 +48,8 @@ export default function LongMenu({ id }) {
           horizontal: 'right',
         }}
       >
-        <MenuItem onClick={() => handleClose('update')}>Update</MenuItem>
-        <MenuItem onClick={() => handleClose('view')}>View</MenuItem>
+        <MenuItem onClick={() => handleClose('publish')}>Publish</MenuItem>
+        <MenuItem onClick={() => handleClose('decline')}>Decline</MenuItem>
       </Menu>
     </div>
   );
