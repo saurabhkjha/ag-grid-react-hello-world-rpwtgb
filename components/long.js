@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import './style.css';
+import '../style.css';
 
 export default function LongMenu({ id }) {
   const [anchorEl, setAnchorEl] = React.useState(null);

@@ -214,50 +214,17 @@ function ActionPopover(props) {
 
 export default function Ag({
   rowData,
+  colData = [],
   pageNumber = 1,
   loading = false,
   hideToolbar = false,
 }) {
   const gridRef = useRef();
   const [columnDefs, setColumnDefs] = useState([
-    {
-      field: 'claimId',
-      // headerName: "Claim ID",
-      filter: true,
-      resizable: true,
-      flex: 1,
-    },
-    {
-      field: 'issueStartTs',
-      headerName: 'Start Date/Time',
-      filter: true,
-      resizable: true,
-      flex: 1,
-    },
-    {
-      field: 'dc',
-      headerName: 'Site #',
-      filter: true,
-      resizable: true,
-      flex: 1,
-    },
-    {
-      field: 'incidentNumber',
-      headerName: 'INC',
-      filter: true,
-      resizable: true,
-      flex: 1,
-    },
-    {
-      field: 'issue',
-      //headerName: "Issue",
-      filter: true,
-      resizable: true,
-      flex: 1,
-    },
+    ...colData,
     { field: 'Action', maxWidth: 100, cellRenderer: ActionPopover },
   ]);
-
+  console.log('=====', coldata, rowData);
   const [gridApi, setGridApi] = useState();
   let paginationProps = {
     pagination: true,
