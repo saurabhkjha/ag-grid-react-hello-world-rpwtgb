@@ -60,6 +60,7 @@ export default function Auth(props) {
               InputLabelProps={{
                 style: { color: '#fff' }, 
              }}
+             
             />
             <TextField
               margin="normal"

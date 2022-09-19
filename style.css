@@ -35,4 +35,5 @@ body {
 .MuiOutlinedInput-notchedOutline,
 .MuiCheckbox-root {
   color: #fff;
+  border-color: white;
 }

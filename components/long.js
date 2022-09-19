@@ -58,7 +58,6 @@ export default function ActionMenu({ id, status, onAction }) {
         >
           Publish
         </MenuItem>
-        <MenuItem onClick={() => handleClose('decline')}>Decline</MenuItem>
       </Menu>
     </div>
   );
