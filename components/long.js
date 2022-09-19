@@ -5,8 +5,9 @@ import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import '../style.css';
+import { API } from '../config';
 
-export default function ActionMenu({ id }) {
+export default function ActionMenu({ id, status, onAction }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -15,7 +16,10 @@ export default function ActionMenu({ id }) {
   };
   const handleClose = (event) => {
     setAnchorEl(null);
-    console.log('=====', event, id);
+
+    if (event === 'publish') {
+      onAction(id);
+    }
   };
 
   return (
@@ -48,7 +52,12 @@ export default function ActionMenu({ id }) {
           horizontal: 'right',
         }}
       >
-        <MenuItem onClick={() => handleClose('publish')}>Publish</MenuItem>
+        <MenuItem
+          disabled={status === 'approved' || status === 'Approved'}
+          onClick={() => handleClose('publish')}
+        >
+          Publish
+        </MenuItem>
         <MenuItem onClick={() => handleClose('decline')}>Decline</MenuItem>
       </Menu>
     </div>

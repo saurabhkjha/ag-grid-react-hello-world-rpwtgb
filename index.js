@@ -29,6 +29,8 @@ import useLocalStorage from './hooks/localstorage';
 import Auth from './components/auth';
 import BenzIcon from './components/benzIcon';
 
+import { API } from './config';
+
 import reviewData from './data/review';
 import productData from './data/products';
 
@@ -70,8 +72,8 @@ const reviewCol = [
     filter: true,
     resizable: true,
     flex: 1,
-    tooltipComponentParams: { color: '#474747' },
-    tooltipField: 'reviewText'
+    tooltipComponentParams: { bkColor: '#474747' },
+    tooltipField: 'reviewText',
   },
   {
     field: 'date',
@@ -99,6 +101,15 @@ const productCol = [
     filter: true,
     resizable: true,
     flex: 1,
+    hide: true,
+  },
+  {
+    field: 'productName',
+    filter: true,
+    resizable: true,
+    flex: 1,
+    tooltipComponentParams: { bkColor: '#474747' },
+    tooltipField: 'productName',
   },
   {
     field: 'status',
@@ -184,9 +195,10 @@ const priceCol = [
     flex: 1,
   },
 ];
-const PRODUCT_URL = 'https://34.107.189.208.nip.io/stocks/all';
-const REVIEW_URL = 'https://34.107.189.208.nip.io/review/approval/';
-const PRICE_URL = 'https://34.107.189.208.nip.io/price/all';
+
+const PRODUCT_URL = `${API}/stocks/all`;
+const REVIEW_URL = `${API}/review/approval/`;
+const PRICE_URL = `${API}/price/all`;
 
 const App = () => {
   const [value, setValue] = React.useState('review');
@@ -268,6 +280,7 @@ const App = () => {
             rowData={rowData}
             action={gridAction}
             loading={loading}
+            refersh={() => setRefresh(true)}
           />
           <Paper
             sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}

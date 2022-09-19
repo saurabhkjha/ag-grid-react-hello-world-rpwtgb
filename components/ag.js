@@ -15,14 +15,19 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import Loading from './loading';
 import '../style.css';
-function ActionPopover(props) {
-  const buttonClicked = () => {
-    alert(`${cellValue} medals won!`);
-  };
 
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+import { API } from '../config';
+function ActionPopover(props) {
   return (
     <span>
-      <ActionMenu id={props.data.id} />
+      <ActionMenu
+        id={props.data.id}
+        status={props.data.status}
+        onAction={(e) => props.onClick(e)}
+      />
     </span>
   );
 }
@@ -31,13 +36,44 @@ export default function Ag({
   rowData,
   colData,
   loading,
+  refersh,
   action = true,
   pageNumber = 1,
 }) {
   const gridRef = useRef();
+  const onAction = useCallback((id) => {
+    var raw = JSON.stringify({
+      "id": id,
+      "status": "approved"
+    });
+    setShowmsg(true);
+    setMsg('Processing...');
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    fetch(`${API}/review/approval/`, requestOptions)
+      .then(response => response.text())
+      .then((result) => {
+        setMsg('Done...');
+        setTimeout(() => {
+          setShowmsg(false);
+          refersh();
+        }, 200);
+      })
+      .catch((error) => console.log('error', error));
+  }, []);
   const [columnDefs, setColumnDefs] = useState([
     ...colData,
-    { field: 'Action', maxWidth: 100, cellRenderer: ActionPopover },
+    {
+      field: 'Action',
+      maxWidth: 100,
+      cellRenderer: ActionPopover,
+      cellRendererParams: { onClick: onAction },
+    },
   ]);
   const [gridApi, setGridApi] = useState();
   let paginationProps = {
@@ -55,7 +91,12 @@ export default function Ag({
     if (action) {
       gridApi.setColumnDefs([
         ...colData,
-        { field: 'Action', maxWidth: 100, cellRenderer: ActionPopover },
+        {
+          field: 'Action',
+          maxWidth: 100,
+          cellRenderer: ActionPopover,
+          cellRendererParams: { onClick: onAction },
+        },
       ]);
     } else {
       gridApi.setColumnDefs(colData);
@@ -109,11 +150,9 @@ export default function Ag({
   }, []);
 
   const cellClickedListener = useCallback((event) => {
-    //console.log('cellClicked', event);
+    //console.log('cellClicked', API);
   }, []);
   const cellValueChangedListener = useCallback((event) => {
-    const myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
     const raw = JSON.stringify({
       id: event.data.id,
       safetyStock: event.data.safetyStock,
@@ -127,14 +166,18 @@ export default function Ag({
       redirect: 'follow',
     };
 
-    fetch('https://34.107.189.208.nip.io/stock/update', requestOptions)
+    fetch(`${API}/stock/update`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
         setMsg('Done...');
-        setTimeout(() => setShowmsg(false), 200);
+        setTimeout(() => {
+          setShowmsg(false);
+          refersh();
+        }, 200);
       })
       .catch((error) => console.log('error', error));
   }, []);
+
   return (
     <div
       className="ag-theme-material"
