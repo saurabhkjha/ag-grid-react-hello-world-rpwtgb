@@ -157,29 +157,74 @@ export default function Ag({
     //console.log('cellClicked', API);
   }, []);
   const cellValueChangedListener = useCallback((event) => {
-    const raw = JSON.stringify({
-      id: event.data.id,
-      safetyStock: event.data.safetyStock,
-    });
-    setShowmsg(true);
-    setMsg('Processing...');
-    const requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow',
-    };
-
-    fetch(`${API}/stock/update`, requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        setMsg('Done...');
+    if (event.colDef.field === 'safetyStock') {
+      if (event.data.safetyStock > event.data.available) {
+        setShowmsg(true);
+        setMsg('Safety Stock can not be bigger then Available Stock');
         setTimeout(() => {
           setShowmsg(false);
           refersh();
-        }, 200);
-      })
-      .catch((error) => console.log('error', error));
+        }, 2000);
+      } else {
+        const raw = JSON.stringify({
+          id: event.data.id,
+          safetyStock: event.data.safetyStock,
+        });
+        setShowmsg(true);
+        setMsg('Processing...');
+        const requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow',
+        };
+
+        fetch(`${API}/stock/update`, requestOptions)
+          .then((response) => response.text())
+          .then((result) => {
+            setMsg('Done...');
+            setTimeout(() => {
+              setShowmsg(false);
+              refersh();
+            }, 200);
+          })
+          .catch((error) => console.log('error', error));
+      }
+    } else if (event.colDef.field === 'price') {
+      if (parseInt(event.data.price) <= 0) {
+        setShowmsg(true);
+        setMsg('Price can not be less then or equal to 0');
+        setTimeout(() => {
+          setShowmsg(false);
+          refersh();
+        }, 2000);
+      } else {
+        const raw = JSON.stringify({
+          id: event.data.id,
+          price: event.data.price,
+          product: event.data.product,
+        });
+        setShowmsg(true);
+        setMsg('Processing...');
+        const requestOptions = {
+          method: 'PUT',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow',
+        };
+
+        fetch(`${API}/price/update`, requestOptions)
+          .then((response) => response.text())
+          .then((result) => {
+            setMsg('Done...');
+            setTimeout(() => {
+              setShowmsg(false);
+              refersh();
+            }, 200);
+          })
+          .catch((error) => console.log('error', error));
+      }
+    }
   }, []);
 
   return (

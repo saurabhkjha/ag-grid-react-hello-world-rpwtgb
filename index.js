@@ -39,7 +39,6 @@ const danger = red[400];
 const disabled = blueGrey[400];
 
 function Editable(props) {
-  console.log('====', props);
   let bkColor = avg;
   if (props.data.available === 0) {
     bkColor = disabled;
@@ -58,7 +57,8 @@ function Editable(props) {
       <EditIcon
         style={{
           marginTop: '10px',
-          color: props.data.available > 0 ? 'none' : bkColor,
+          color:
+            props.data.available > 0 || props.data.price > 0 ? 'none' : bkColor,
         }}
       />
     </span>
@@ -72,7 +72,7 @@ function MbRating(props) {
         name="read-only"
         value={props.value}
         readOnly
-        style={{ color: '#00ADEF', fontSize:'14px' }}
+        style={{ color: '#00ADEF', fontSize: '14px' }}
       />
     </span>
   );
@@ -97,7 +97,7 @@ function StockCell(props) {
 function ReviewStatus(props) {
   let status = 'Not Approved';
   let bkColor = 'none';
-  if (props.value.toLowerCase() === 'approved') {
+  if (props.value && props.value.toLowerCase() === 'approved') {
     status = 'Approved';
     bkColor = '#00ADEF';
   }
@@ -266,6 +266,10 @@ const priceCol = [
     filter: true,
     resizable: true,
     flex: 1,
+    editable: (params) => {
+      return params.data.price > 0;
+    },
+    cellRenderer: Editable,
   },
   {
     field: 'currency',
